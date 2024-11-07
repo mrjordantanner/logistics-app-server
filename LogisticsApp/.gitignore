@@ -1,0 +1,81 @@
+# Ignore build outputs
+bin/
+obj/
+
+# User-specific files
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.dbmdl
+*.jfm
+
+# Logs and debug files
+*.log
+.vscode/*
+*.tlog
+
+# Azure-specific files
+.localhistory/
+.vs/
+
+# Dependency folders
+node_modules/
+wwwroot/lib/
+
+# ASP.NET Temporary Files
+.vscode/
+.idea/
+.DS_Store
+
+# Package Management
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# Environment and secret settings
+appsettings.Development.json
+appsettings.*.json
+
+# Resharper files
+_ReSharper*/
+*.DotSettings.user
+
+# Rider files
+.idea/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# macOS files
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Compiled DLL files
+*.dll
+*.exe
+*.pdb
+*.testresults
+
+# Temporary and hidden files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Visual Studio Code specific
+.history
+.ionide
+node_modules
