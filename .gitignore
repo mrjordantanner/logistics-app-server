@@ -1,3 +1,7 @@
+appsettings.json
+appsettings.*.json
+Properties/launchSettings.json
+
 # Ignore build outputs
 bin/
 obj/

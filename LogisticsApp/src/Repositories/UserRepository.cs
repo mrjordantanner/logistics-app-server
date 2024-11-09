@@ -8,7 +8,7 @@ using LogisticsApp.Contexts;
 namespace LogisticsApp.Repositories;
 
 /// <summary>
-/// Reads and Writes User data to and from the databse.
+/// Reads and Writes User data to and from the database.
 /// </summary>
 public class UserRepository : IUserRepository
 {
@@ -29,6 +29,19 @@ public class UserRepository : IUserRepository
     public async Task<User> GetUserByIdAsync(int id)
     {
         return await _context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        try
+        {
+            return await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("UserRepository: Error attempting to find user by email: {ex}", ex);
+            return null;
+        }
     }
 
     public async Task<User> AddUserAsync(User newUser)

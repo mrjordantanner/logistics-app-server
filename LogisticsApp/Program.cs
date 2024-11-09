@@ -5,6 +5,22 @@ using LogisticsApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost4200", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:4200", "https://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+// Add controllers
+builder.Services.AddControllers();
+
 // Configure services
 ConfigureServices(builder.Services, builder.Configuration);
 
@@ -18,8 +34,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization(); // If you have authentication/authorization
+// Enable CORS policy globally
+app.UseCors("AllowLocalhost4200");
+
+//app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
@@ -33,16 +53,13 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         options.UseSqlServer(connectionString));
 
     // Add custom services and repositories with Scoped lifetime
+    services.AddScoped<IItemRepository, ItemRepository>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IUserService, UserService>();
-
-    // Add controllers
-    services.AddControllers();
 
     // Add Swagger for API documentation
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
     services.AddHttpClient();
-
 }
