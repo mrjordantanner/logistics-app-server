@@ -1,16 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
 using LogisticsApp.Models;
-using LogisticsApp.Contexts;
-using Microsoft.Extensions.Logging;
+using LogisticsApp.Data;
 
 namespace LogisticsApp.Repositories;
 
-/// <summary>
-/// Reads and Writes Item data to and from the database.
-/// </summary>
 public class ItemRepository : IItemRepository
 {
     private readonly AppDbContext _context;
@@ -69,7 +62,7 @@ public class ItemRepository : IItemRepository
     }
 
     // Get Item by Id
-    public async Task<Item> GetItemByIdAsync(string id)
+    public async Task<Item> GetItemByIdAsync(int id)
     {
         try
         {

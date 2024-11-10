@@ -1,9 +1,14 @@
 ﻿using LogisticsApp.Models;
-using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LogisticsApp.Services;
 
 public interface IUserService
 {
-    public Task<User> CreateNewUser(UserDto userDto);
+    Task<User> CreateNewUser(CreateUserRequest request);
+    Task<User> GetUserById(int id);
+    Task<IEnumerable<User>> GetAllUsers();
+    Task<User> UpdateUser(int id, User user);
+    Task<bool> DeleteUser(int id);
 }

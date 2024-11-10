@@ -26,10 +26,14 @@ public class User
     public string Email { get; set; } = string.Empty;
 
     [Required]
+    public int Phone { get; set; }
+
+    [Required]
     public byte[] PasswordHash { get; set; }
 
     [Required]
     public byte[] PasswordSalt { get; set; }
+
 
     [Required]
     public UserRole Role { get; set; } = UserRole.Driver;
@@ -37,6 +41,10 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }
+
+    // Driver-specific fields, Nullable for Admins
+    public virtual int? CurrentPostalCode { get; set; }
+    public virtual DriverStatus Status { get; set; } = DriverStatus.Available;
 
     /// <summary>
     /// Generates a new PasswordSalt using HMACSHA512’s randomly generated key.
@@ -64,3 +72,28 @@ public class User
         return true;
     }
 }
+
+public class CreateUserRequest
+{
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    [MaxLength(255)]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    public int Phone { get; set; }
+
+    [Required]
+    public string Password { get; set; }
+
+    [Required]
+    public UserRole Role { get; set; } = UserRole.Driver;
+}
+

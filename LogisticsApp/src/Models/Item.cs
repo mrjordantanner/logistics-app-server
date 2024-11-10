@@ -1,25 +1,27 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogisticsApp.Models;
 
 public class Item
 {
-    [Required]
-    public string Id { get; set; } = Guid.NewGuid().ToString("N").Substring(0, 8);
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
+    [MaxLength(255)]
     public string Description { get; set; } = string.Empty;
 
     [Required]
-    public int Weight { get; set; } = 0;
+    public int Weight { get; set; }
 
     [Required]
-    public int Value { get; set; } = 0;
+    public int Value { get; set; }
 
-    [Required]
-    public string Size { get; set; } = "small";
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

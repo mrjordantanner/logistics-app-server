@@ -9,6 +9,6 @@ public interface IItemRepository
     Task<Item> AddItemAsync(Item newItem);
     Task<IEnumerable<Item>> AddItemsAsync(List<Item> newItems);
     Task<IEnumerable<Item>> GetAllItemsAsync();
-    Task<Item> GetItemByIdAsync(string id);
+    Task<Item> GetItemByIdAsync(int id);
     Task<Item> GetItemByNameAsync(string itemName);
 }

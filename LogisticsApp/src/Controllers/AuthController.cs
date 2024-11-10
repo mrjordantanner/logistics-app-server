@@ -4,10 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using LogisticsApp.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
 using System;
 using LogisticsApp.Repositories;
 
@@ -47,12 +44,15 @@ public class AuthController : ControllerBase
 
     private string GenerateJwtToken(User user)
     {
-        var claims = new[]
+        // You can serialize the user object or pick necessary properties
+        var userClaims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Role, user.Role.ToString()),
-            new Claim("id", user.Id.ToString())
+            new Claim("id", user.Id.ToString()),
+            new Claim("name", user.Name),
+            new Claim("email", user.Email)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
@@ -61,7 +61,7 @@ public class AuthController : ControllerBase
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
-            claims: claims,
+            claims: userClaims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: creds
         );

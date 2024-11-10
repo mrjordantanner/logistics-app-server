@@ -1,0 +1,23 @@
+INSERT INTO Items (Name, Description, Weight, Value)
+VALUES
+('Cement Bag', 'A 50 kg bag of Portland cement, used for making concrete and mortar.', 110, 10),
+('Concrete Block', 'A standard 8-inch concrete block used in construction for walls and foundations.', 44, 3),
+('Steel Rebar', 'Steel reinforcement bar used to strengthen concrete structures.', 11, 1.5),
+('Wooden Beam', 'A large wooden beam, typically used for framing floors and ceilings in construction.', 55, 40),
+('Drywall Sheet', 'A large sheet of drywall used for interior wall and ceiling construction.', 44, 12),
+('Insulation Roll', 'Fiberglass or foam insulation material used to regulate temperature and sound in buildings.', 22, 25),
+('Roof Shingles', 'Overlapping tiles used to cover roofs, typically made from asphalt, wood, or metal.', 4, 1.25),
+('Plywood Sheet', 'A wooden panel made by gluing thin layers of wood together, used for flooring and construction.', 66, 18),
+('Bricks', 'Standard clay or concrete bricks used for constructing walls and foundations.', 7, 0.75),
+('Gravel', 'Small rocks used as a base material for roads, foundations, and drainage.', 2205, 30),
+('Sand', 'Fine-grained material used in concrete, mortar, and landscaping.', 3307, 25),
+('Paint', 'Liquid coating used for finishing and protecting surfaces, available in various types (e.g., interior, exterior).', 11, 20),
+('PVC Pipes', 'Plastic pipes used for plumbing, electrical conduits, and drainage systems.', 7, 2),
+('Glass Panel', 'Flat glass used for windows, facades, and other architectural purposes.', 33, 50),
+('Metal Sheet', 'Thin sheets of metal used in roofing, cladding, and construction frames.', 22, 30),
+('Concrete Slab', 'Large pre-cast concrete slabs used for floors, foundations, and roofing.', 441, 100),
+('Mortar Mix', 'A mixture of cement, sand, and water used for bonding bricks and stones.', 55, 8),
+('Lumber', 'Wood that has been processed into standard sizes, typically used for framing and construction.', 22, 10),
+('Stone Slab', 'Large slabs of natural stone, such as granite or marble, used for countertops or flooring.', 110, 200),
+('Tile', 'Flat pieces of ceramic, porcelain, or stone used for flooring and wall coverings.', 2, 2),
+('Reinforced Mesh', 'A welded wire mesh used to reinforce concrete structures.', 22, 30);

@@ -1,69 +1,79 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using LogisticsApp.Models;
 using LogisticsApp.Services;
-using LogisticsApp.Models;
-using LogisticsApp.Repositories;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LogisticsApp.Controllers;
 
-/// <summary>
-/// API Controller for Users.
-/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
     private readonly IUserService _userService;
 
-    public UserController(IUserRepository userRepository, IUserService userService)
+    public UserController(IUserService userService)
     {
-        _userRepository = userRepository;
         _userService = userService;
     }
 
-    // GET: api/user
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+    [HttpPost]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
     {
-        var users = await _userRepository.GetAllUsersAsync();
-
-        if (users == null || !users.Any())
+        try
         {
-            return NotFound();
+            var createdUser = await _userService.CreateNewUser(request);
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUser(int id)
+    {
+        try
+        {
+            var user = await _userService.GetUserById(id);
+            return Ok(user);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _userService.GetAllUsers();
         return Ok(users);
     }
 
-    // GET: api/user/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUserById(int id)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
     {
-        var user = await _userRepository.GetUserByIdAsync(id);
-        if (user == null)
+        try
         {
-            return NotFound();
+            var updatedUser = await _userService.UpdateUser(id, user);
+            return Ok(updatedUser);
         }
-
-        return Ok(user);
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
-    // POST: api/user
-    [HttpPost]
-    public async Task<ActionResult<User>> CreateUser([FromBody] UserDto userDto)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
     {
-        if (userDto == null || string.IsNullOrEmpty(userDto.Name) || string.IsNullOrEmpty(userDto.Email))
+        var result = await _userService.DeleteUser(id);
+        if (result)
         {
-            return BadRequest("CreateUser: Invalid User data.");
+            return NoContent();
         }
-
-        var newUser = await _userService.CreateNewUser(userDto);
-
-        return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
+        return NotFound($"User with id {id} not found.");
     }
-
 }
-
