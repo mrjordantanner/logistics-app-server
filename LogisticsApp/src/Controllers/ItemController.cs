@@ -42,9 +42,9 @@ public class ItemController : ControllerBase
         return Ok(items);
     }
 
-    // GET: api/item
-    [HttpGet]
-    public async Task<IActionResult> GetItemByName([FromQuery] string itemName)
+    // GET: api/item/{itemName}
+    [HttpGet("{itemName}")]
+    public async Task<IActionResult> GetItemByName(string itemName)
     {
         var item = await _itemRepository.GetItemByNameAsync(itemName);
 

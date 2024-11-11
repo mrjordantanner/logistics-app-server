@@ -45,13 +45,13 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
         options.UseSqlServer(connectionString));
 
     // Add repositories
-    services.AddScoped<ILocationRepository, LocationRepository>();
+    services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IItemRepository, ItemRepository>();
+    services.AddScoped<ILocationRepository, LocationRepository>();
     services.AddScoped<IOrderItemRepository, OrderItemRepository>();
     services.AddScoped<IOrderRepository, OrderRepository>();
     services.AddScoped<IDeliveryRepository, DeliveryRepository>();
-    services.AddScoped<ILocationRepository, LocationRepository>();
- 
+
     // Add services
     services.AddScoped<IDeliveryService, DeliveryService>();
     services.AddScoped<IUserService, UserService>();

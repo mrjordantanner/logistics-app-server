@@ -12,10 +12,10 @@ namespace LogisticsApp.Controllers;
 [ApiController]
 public class OrderController : ControllerBase
 {
-    private readonly OrderService _orderService;
+    private readonly IOrderService _orderService;
     private readonly ILogger<OrderController> _logger;
 
-    public OrderController(OrderService orderService, ILogger<OrderController> logger)
+    public OrderController(IOrderService orderService, ILogger<OrderController> logger)
     {
         _orderService = orderService;
         _logger = logger;
@@ -50,7 +50,7 @@ public class OrderController : ControllerBase
         }
     }
 
-    // GET: api/Order/{id}
+    // GET: api/order/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOrderById(int id)
     {
@@ -73,7 +73,7 @@ public class OrderController : ControllerBase
         }
     }
 
-    // GET: api/Order
+    // GET: api/order
     [HttpGet]
     public async Task<IActionResult> GetAllOrders()
     {

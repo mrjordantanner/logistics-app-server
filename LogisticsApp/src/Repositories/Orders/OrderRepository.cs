@@ -22,7 +22,7 @@ public class OrderRepository : IOrderRepository
             return await _context.Orders
                                  .Include(o => o.Origin)
                                  .Include(o => o.Destination)
-                                 .Include(o => o.Delivery)
+                                 //.Include(o => o.Delivery)
                                  .ToListAsync();
         }
         catch (Exception ex)
@@ -39,7 +39,7 @@ public class OrderRepository : IOrderRepository
             return await _context.Orders
                                  .Include(o => o.Origin)
                                  .Include(o => o.Destination)
-                                 .Include(o => o.Delivery)
+                                 //.Include(o => o.Delivery)
                                  .FirstOrDefaultAsync(o => o.Id == id);
         }
         catch (Exception ex)
@@ -51,9 +51,25 @@ public class OrderRepository : IOrderRepository
 
     public async Task CreateOrderAsync(Order order)
     {
+        _context.ChangeTracker.Clear();
+
         try
         {
             _context.Orders.Add(order);
+
+            Console.WriteLine("Creating Order...");
+            Console.WriteLine($"Id {order.Id}");
+            Console.WriteLine($"OriginId {order.OriginId}");
+            Console.WriteLine($"DestinationId {order.DestinationId}");
+            //Console.WriteLine($"DeliveryId {order.DeliveryId}");
+            //Console.WriteLine($"OrderDate {order.CreatedAt}");
+            Console.WriteLine($"OrderStatus {order.OrderStatus}");
+            Console.WriteLine($"---");
+            Console.WriteLine($"Origin {order.Origin}");
+            Console.WriteLine($"Destination {order.Destination}");
+            //Console.WriteLine($"Delivery {order.Delivery}");
+            Console.WriteLine($"OrderItems {order.OrderItems.Count}");
+
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)

@@ -35,22 +35,72 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configure User entity
+        // User
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(u => u.Id);
-            entity.Property(u => u.Role).IsRequired().HasMaxLength(10);
-            entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
-            entity.Property(u => u.Phone).IsRequired().HasMaxLength(15);
-            entity.Property(u => u.CreatedAt).IsRequired();
-            entity.Property(u => u.UpdatedAt).IsRequired(false);
+
+            // Use the Role column as the discriminator
+            entity.HasDiscriminator<string>("Role")
+                .HasValue<Admin>("Admin")  // Admin role maps to Admin class
+                .HasValue<Driver>("Driver");  // Driver role maps to Driver class
+
+            // Properties from the User class
+            entity.Property(u => u.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.Property(u => u.Phone)
+                .HasMaxLength(15);  // Optional phone number field, can be null
+
+            entity.Property(u => u.PasswordHash)
+                .IsRequired();
+
+            entity.Property(u => u.PasswordSalt)
+                .IsRequired();
+
+            entity.Property(u => u.Role)
+                .IsRequired()
+                .HasDefaultValue("Driver");  // Default to 'Driver' role as string
+
+            entity.Property(u => u.CreatedAt)
+                .IsRequired()
+                .HasColumnType("datetime2");
+
+            entity.Property(u => u.UpdatedAt)
+                .HasColumnType("datetime2");
 
             // Driver-specific fields (nullable for Admins)
-            entity.Property(u => u.CurrentPostalCode).IsRequired(false);
-            entity.Property(u => u.Status).HasMaxLength(10).HasDefaultValue(DriverStatus.Available);
+            entity.Property(u => u.CurrentPostalCode);
+
+            // Driver-specific Status (needs to be string in the database)
+            entity.Property(u => u.Status)
+                .HasConversion<string>()  // Convert DriverStatus enum to string in the database
+                .HasDefaultValue(DriverStatus.Available);
         });
 
-        // Configure Item entity
+
+        // Driver
+        modelBuilder.Entity<Driver>(entity =>
+        {
+            // Explicitly specify that Driver is a subclass of User
+            entity.HasBaseType<User>();  // This makes sure Driver is treated as a subclass of User
+
+            // Driver-specific properties, overriding the base User class
+            entity.Property(d => d.CurrentPostalCode)
+                .HasMaxLength(10);  // You can define a length for postal code if needed
+
+            entity.Property(d => d.Status)
+                .HasConversion<string>()  // Ensure the DriverStatus enum is stored as string
+                .HasDefaultValue(DriverStatus.Available);
+        });
+
+
+        // Item
         modelBuilder.Entity<Item>(entity =>
         {
             entity.HasKey(i => i.Id);
@@ -60,22 +110,29 @@ public class AppDbContext : DbContext
             entity.Property(i => i.Value).IsRequired();
         });
 
-        // Configure Driver entity (inherits from User)
-        modelBuilder.Entity<Driver>(entity =>
-        {
-            entity.HasBaseType<User>();
-        });
 
-        // Configure Order entity
+        // Order
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(o => o.Id);
 
-            // Ensure that each order is part of one delivery (non-nullable)
-            entity.HasOne(o => o.Delivery)
-                .WithMany(d => d.Orders)  // One delivery can have many orders
-                .HasForeignKey(o => o.DeliveryId) // Foreign key for delivery
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete when a delivery is deleted
+            //entity.Property(o => o.DeliveryId);
+
+            //entity.Property(u => u.CreatedAt)
+            //    .IsRequired()
+            //    .HasColumnType("datetime2");
+
+            //entity.Property(u => u.UpdatedAt)
+            //    .HasColumnType("datetime2");
+
+            entity.Property(o => o.OrderStatus)
+                .HasDefaultValue(OrderStatus.Pending)
+                .HasConversion<string>();
+
+            //entity.HasOne(o => o.Delivery)
+            //    .WithMany(d => d.Orders)  // One delivery can have many orders
+            //    .HasForeignKey(o => o.DeliveryId)
+            //    .OnDelete(DeleteBehavior.Cascade); // Cascade delete when a delivery is deleted
 
             entity.HasOne(o => o.Origin)
                 .WithMany()
@@ -89,7 +146,7 @@ public class AppDbContext : DbContext
         });
 
 
-        // Configure OrderItem entity
+        // OrderItem
         modelBuilder.Entity<OrderItem>(entity =>
         {
             entity.HasKey(oi => oi.Id);
@@ -108,7 +165,7 @@ public class AppDbContext : DbContext
         });
 
 
-        // Configure Delivery entity
+        // Delivery
         modelBuilder.Entity<Delivery>(entity =>
         {
             entity.HasKey(d => d.Id);
@@ -116,7 +173,8 @@ public class AppDbContext : DbContext
             entity.Property(d => d.Status)
                 .IsRequired()
                 .HasMaxLength(50)
-                .HasDefaultValue("Scheduled");
+                .HasDefaultValue(DeliveryStatus.Scheduled)
+                .HasConversion<string>();
 
             // Foreign Key relationships
             entity.HasOne(d => d.Driver)
@@ -124,10 +182,10 @@ public class AppDbContext : DbContext
                 .HasForeignKey(d => d.DriverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasMany(d => d.Orders)  // One delivery can have many orders
-                .WithOne(o => o.Delivery)   // Each order is linked to exactly one delivery
-                .HasForeignKey(o => o.DeliveryId) // Foreign key on Order
-                .OnDelete(DeleteBehavior.Cascade); // Deletes orders when the associated delivery is deleted
+            //entity.HasMany(d => d.Orders)  // One delivery can have many orders
+            //    .WithOne(o => o.Delivery)   // Each order is linked to exactly one delivery
+            //    .HasForeignKey(o => o.DeliveryId) // Foreign key on Order
+            //    .OnDelete(DeleteBehavior.Cascade); // Deletes orders when the associated delivery is deleted
 
             entity.HasOne(d => d.OriginLocation)
                 .WithMany()
@@ -143,16 +201,8 @@ public class AppDbContext : DbContext
                 .HasDatabaseName("idx_deliveries_driverid");
         });
 
-        modelBuilder.Entity<Order>(entity =>
-        {
-            entity.HasKey(o => o.Id);
-            // Ensure that each order has a valid DeliveryId
-            entity.Property(o => o.DeliveryId)
-                .IsRequired();
-        });
 
-
-        // Configure Location entity
+        // Location
         modelBuilder.Entity<Location>(entity =>
         {
             entity.HasKey(l => l.Id);

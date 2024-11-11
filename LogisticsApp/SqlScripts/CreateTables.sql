@@ -18,8 +18,8 @@ CREATE TABLE Users (
     Role NVARCHAR(10) NOT NULL,
     Email NVARCHAR(100) NOT NULL,
     Phone NVARCHAR(15) NOT NULL, 
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME,
+    CreatedAt DATETIME DEFAULT GETUTCDATE(),
+    UpdatedAt DATETIME DEFAULT GETUTCDATE(),
 
     -- Driver-specific columns (nullable for Admins)
     CurrentPostalCode INT NULL,
@@ -42,12 +42,13 @@ CREATE TABLE Orders (
     Id INT PRIMARY KEY IDENTITY(1,1),
     Origin INT,
     Destination INT,
-    DeliveryId INT,
-    OrderDate DATETIME DEFAULT GETDATE(),
+    --DeliveryId INT,
+    OrderDate DATETIME DEFAULT GETUTCDATE(),
+    UpdatedAt DATETIME DEFAULT GETUTCDATE(),
     OrderStatus NVARCHAR(50) CHECK (OrderStatus IN ('Pending', 'Shipped', 'Delivered', 'Cancelled')),
-    FOREIGN KEY (Origin) REFERENCES Locations(Id),
-    FOREIGN KEY (Destination) REFERENCES Locations(Id),
-    FOREIGN KEY (DeliveryId) REFERENCES Deliveries(Id)
+    --FOREIGN KEY (Origin) REFERENCES Locations(Id),
+    --FOREIGN KEY (Destination) REFERENCES Locations(Id),
+    --FOREIGN KEY (DeliveryId) REFERENCES Deliveries(Id)
 );
 
  -- Deliveries Table

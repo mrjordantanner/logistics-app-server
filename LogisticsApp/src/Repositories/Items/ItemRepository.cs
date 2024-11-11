@@ -80,7 +80,8 @@ public class ItemRepository : IItemRepository
     {
         try
         {
-            return await _context.Items.FirstOrDefaultAsync(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+            //return await _context.Items.FirstOrDefaultAsync(i => i.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+            return await _context.Items.FirstOrDefaultAsync(i => i.Name.Equals(itemName));
         }
         catch (Exception ex)
         {

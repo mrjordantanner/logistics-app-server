@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace LogisticsApp.Models;
 
@@ -16,5 +17,6 @@ public class Driver : User
 
     public override int? CurrentPostalCode { get; set; }
 
-    public override DriverStatus Status { get; set; } = DriverStatus.Available;
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public DriverStatus Status { get; set; } = DriverStatus.Available;
 }

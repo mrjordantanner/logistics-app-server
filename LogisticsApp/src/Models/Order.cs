@@ -1,6 +1,7 @@
 ﻿using LogisticsApp.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace LogisticsApp.Models
 {
@@ -17,28 +18,24 @@ namespace LogisticsApp.Models
         [Key]
         public int Id { get; set; }
 
-        // Foreign Key for Origin Location
-        [ForeignKey("Origin")]
+        [ForeignKey("OriginId")]
         public int OriginId { get; set; }
 
-        // Foreign Key for Destination Location
-        [ForeignKey("Destination")]
+        [ForeignKey("DestinationId")]
         public int DestinationId { get; set; }
 
-        // Foreign Key for the associated Delivery (each order is part of one delivery)
-        [Required]
-        public int DeliveryId { get; set; } // Made required (non-nullable)
+       // public int? DeliveryId { get; set; }
 
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        //public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Enum for order status
-        [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 
         // Navigation properties
         public virtual Location Origin { get; set; }
         public virtual Location Destination { get; set; }
-        public virtual Delivery Delivery { get; set; } // Each order is linked to exactly one delivery
-        public virtual ICollection<OrderItem> OrderItems { get; set; } // Relationship with OrderItems
+        //public virtual Delivery? Delivery { get; set; } = null;
+        public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

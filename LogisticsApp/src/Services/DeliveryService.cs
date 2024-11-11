@@ -48,9 +48,9 @@ namespace LogisticsApp.Services
                 existingDelivery.Origin = updatedDelivery.Origin;
                 existingDelivery.Destination = updatedDelivery.Destination;
                 existingDelivery.Orders = updatedDelivery.Orders;
-                existingDelivery.TargetDeliveryDate = updatedDelivery.TargetDeliveryDate;
-                existingDelivery.ActualDeliveryDate = updatedDelivery.ActualDeliveryDate;
-                existingDelivery.UpdatedAt = DateTime.UtcNow;
+                //existingDelivery.TargetDeliveryDate = updatedDelivery.TargetDeliveryDate;
+                //existingDelivery.ActualDeliveryDate = updatedDelivery.ActualDeliveryDate;
+                //existingDelivery.UpdatedAt = DateTime.UtcNow;
 
                 await _deliveryRepository.UpdateDeliveryAsync(existingDelivery);
             }

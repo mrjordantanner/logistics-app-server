@@ -97,3 +97,4 @@ C:\Users\mrzos\OneDrive\Documents\repos\logistics-app-server\LogisticsAppTests\o
 C:\Users\mrzos\OneDrive\Documents\repos\logistics-app-server\LogisticsAppTests\obj\Debug\net8.0\LogisticsAppTests.pdb
 C:\Users\mrzos\OneDrive\Documents\repos\logistics-app-server\LogisticsAppTests\obj\Debug\net8.0\LogisticsAppTests.genruntimeconfig.cache
 C:\Users\mrzos\OneDrive\Documents\repos\logistics-app-server\LogisticsAppTests\obj\Debug\net8.0\ref\LogisticsAppTests.dll
+C:\Users\mrzos\OneDrive\Documents\repos\logistics-app-server\LogisticsAppTests\obj\Debug\net8.0\LogisticsAppTests.sourcelink.json

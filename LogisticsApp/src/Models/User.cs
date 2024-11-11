@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 
 namespace LogisticsApp.Models;
 
-public enum UserRole
-{
-    Admin,
-    Driver
-}
+//public enum UserRole
+//{
+//    Admin,
+//    Driver
+//}
 
 public class User
 {
@@ -25,8 +26,7 @@ public class User
     [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
-    public int Phone { get; set; }
+    public int? Phone { get; set; }
 
     [Required]
     public byte[] PasswordHash { get; set; }
@@ -34,16 +34,17 @@ public class User
     [Required]
     public byte[] PasswordSalt { get; set; }
 
-
     [Required]
-    public UserRole Role { get; set; } = UserRole.Driver;
+    public string Role { get; set; } = "Driver";
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime? UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Driver-specific fields, Nullable for Admins
     public virtual int? CurrentPostalCode { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public virtual DriverStatus Status { get; set; } = DriverStatus.Available;
 
     /// <summary>
@@ -87,13 +88,11 @@ public class CreateUserRequest
     [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
-    public int Phone { get; set; }
+    public int? Phone { get; set; }
 
     [Required]
-    public string Password { get; set; }
-
+    public string Password { get; set; } = string.Empty;
+    
     [Required]
-    public UserRole Role { get; set; } = UserRole.Driver;
+    public string Role { get; set; } = "Driver";
 }
-

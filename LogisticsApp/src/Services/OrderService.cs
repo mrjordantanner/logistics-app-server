@@ -2,6 +2,7 @@
 using LogisticsApp.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace LogisticsApp.Services;
@@ -12,67 +13,88 @@ public class OrderService : IOrderService
     private readonly IOrderItemRepository _orderItemRepository;
     private readonly IItemRepository _itemRepository;
     private readonly ILocationRepository _locationRepository;
+    private readonly ILogger<OrderService> _logger;
 
     public OrderService(IOrderRepository ordersRepository,
                         IOrderItemRepository orderItemsRepository,
                         IItemRepository itemRepository,
-                        ILocationRepository locationRepository)
+                        ILocationRepository locationRepository,
+                        ILogger<OrderService> logger)
     {
         _orderRepository = ordersRepository;
         _orderItemRepository = orderItemsRepository;
         _itemRepository = itemRepository;
         _locationRepository = locationRepository;
+        _logger = logger;
     }
 
     public async Task<Order> CreateOrderWithItems(OrderDto orderDto)
     {
+
+
+
         // Validate Origin and Destination location
-        var origin = await _locationRepository.GetLocationByNameAsync(orderDto.Origin.Name);
-        var destination = await _locationRepository.GetLocationByNameAsync(orderDto.Destination.Name);
+        var origin = await _locationRepository.GetLocationByNameAsync(orderDto.OriginName);
+        var destination = await _locationRepository.GetLocationByNameAsync(orderDto.DestinationName);
         if (origin == null || destination == null)
         {
-            throw new ArgumentException("Invalid origin or destination");
+            _logger.LogError("CreateOrder: Invalid origin or destination");
+            return null;
         }
 
-        // Create Order
+        // Create the Order entity first (without OrderItems)
         var order = new Order
         {
-            OrderDate = DateTime.Now,
+            //CreatedAt = DateTime.UtcNow,
             OrderStatus = OrderStatus.Pending,
             OriginId = origin.Id,
             DestinationId = destination.Id
         };
 
+        // Save the Order first to get the OrderId assigned
         await _orderRepository.CreateOrderAsync(order);
 
-        // Create OrderItems from the provided items
+        // Create and associate OrderItems
+        var orderItems = new List<OrderItem>();
+
         foreach (var itemDto in orderDto.Items)
         {
             var item = await _itemRepository.GetItemByIdAsync(itemDto.ItemId);
             if (item == null)
             {
-                throw new ArgumentException($"Item with ID {itemDto.ItemId} does not exist");
+                _logger.LogError("CreateOrder: Item with ID {id} does not exist", itemDto.ItemId);
+                return null;
             }
 
             var orderItem = new OrderItem
             {
-                OrderId = order.Id,
+                OrderId = order.Id,  // Use the newly assigned OrderId
                 ItemId = item.Id,
                 Quantity = itemDto.Quantity
             };
 
+            // Add OrderItem to the list
+            orderItems.Add(orderItem);
+        }
+
+        // Save OrderItems to the OrderItems table after the Order is created
+        foreach (var orderItem in orderItems)
+        {
             await _orderItemRepository.CreateOrderItemAsync(orderItem);
         }
 
         return order;
     }
 
+
     public async Task<Order> GetOrderByIdAsync(int id)
     {
         var order = await _orderRepository.GetOrderByIdAsync(id);
         if (order == null)
         {
-            throw new KeyNotFoundException($"Order with ID {id} not found.");
+            _logger.LogError("CreateOrder: Order with ID {id} not found.", id);
+            return null;
+            //throw new KeyNotFoundException($"Order with ID {id} not found.");
         }
 
         return order;
@@ -86,17 +108,21 @@ public class OrderService : IOrderService
     public async Task<Order> UpdateOrderAsync(int id, OrderDto orderDto)
     {
         // Validate Origin and Destination location
-        var origin = await _locationRepository.GetLocationByNameAsync(orderDto.Origin.Name);
-        var destination = await _locationRepository.GetLocationByNameAsync(orderDto.Destination.Name);
+        var origin = await _locationRepository.GetLocationByNameAsync(orderDto.OriginName);
+        var destination = await _locationRepository.GetLocationByNameAsync(orderDto.DestinationName);
         if (origin == null || destination == null)
         {
-            throw new ArgumentException("Invalid origin or destination");
+            //throw new ArgumentException("Invalid origin or destination");
+            _logger.LogError("CreateOrder:  Invalid origin or destination");
+            return null;
         }
 
         var order = await _orderRepository.GetOrderByIdAsync(id);
         if (order == null)
         {
-            throw new KeyNotFoundException($"Order with ID {id} not found.");
+            //throw new KeyNotFoundException($"Order with ID {id} not found.");
+            _logger.LogError("CreateOrder: Order with ID {id} not found.", id);
+            return null;
         }
 
         // Update the order
@@ -112,7 +138,9 @@ public class OrderService : IOrderService
             var item = await _itemRepository.GetItemByIdAsync(itemDto.ItemId);
             if (item == null)
             {
-                throw new ArgumentException($"Item with ID {itemDto.ItemId} does not exist");
+                _logger.LogError("CreateOrder: Item with ID {id} does not exist.", id);
+                return null;
+                //throw new ArgumentException($"Item with ID {itemDto.ItemId} does not exist");
             }
 
             var existingOrderItem = await _orderItemRepository.GetOrderItemByOrderAndItemAsync(order.Id, item.Id);
@@ -141,13 +169,15 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetOrderByIdAsync(id);
         if (order == null)
         {
-            throw new KeyNotFoundException($"Order with ID {id} not found.");
+            _logger.LogError("CreateOrder: Order with ID {id} not found.", id);
+            return;
+           // throw new KeyNotFoundException($"Order with ID {id} not found.");
         }
 
         // Delete associated order items first
         await _orderItemRepository.DeleteOrderItemsByOrderIdAsync(id);
 
-        // Then delete the order
+        // Then delete the order (NOTE: does cascade delete in the db cause this to be deleted anyway?)
         await _orderRepository.DeleteOrderAsync(id);
     }
 }
@@ -155,21 +185,27 @@ public class OrderService : IOrderService
 
 public class OrderDto
 {
-    public LocationDto Origin { get; set; }
-    public LocationDto Destination { get; set; }
+    //public LocationDto Origin { get; set; }
+    //public LocationDto Destination { get; set; }
+
+    public string OriginName { get; set; }
+    public string DestinationName { get; set; }
     public List<ItemDto> Items { get; set; }
+    
+    // Status property so we can update the Order's status after it's created
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public OrderStatus Status { get; set; }
 }
 
-public class LocationDto
-{
-    public string Name { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string PostalCode { get; set; }
-    public decimal? Latitude { get; set; }
-    public decimal? Longitude { get; set; }
-}
+//public class LocationDto
+//{
+//    public string Name { get; set; }
+//    public string City { get; set; }
+//    public string State { get; set; }
+//    public string PostalCode { get; set; }
+//    public decimal? Latitude { get; set; }
+//    public decimal? Longitude { get; set; }
+//}
 
 public class ItemDto
 {

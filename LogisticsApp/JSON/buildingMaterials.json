@@ -1,170 +1,128 @@
 [
   {
-    "id": "a1b2c3d4",
     "name": "Cement Bag",
     "description": "A 50 kg bag of Portland cement, used for making concrete and mortar.",
     "weight": 110,
-    "value": 10,
-    "size": "medium"
+    "value": 10
   },
   {
-    "id": "e5f6g7h8",
     "name": "Concrete Block",
     "description": "A standard 8-inch concrete block used in construction for walls and foundations.",
     "weight": 44,
-    "value": 3,
-    "size": "medium"
+    "value": 3
   },
   {
-    "id": "i9j0k1l2",
     "name": "Steel Rebar",
     "description": "Steel reinforcement bar used to strengthen concrete structures.",
     "weight": 11,
-    "value": 1.5,
-    "size": "small"
+    "value": 2
   },
   {
-    "id": "m3n4o5p6",
     "name": "Wooden Beam",
     "description": "A large wooden beam, typically used for framing floors and ceilings in construction.",
     "weight": 55,
-    "value": 40,
-    "size": "large"
+    "value": 40
   },
   {
-    "id": "q7r8s9t0",
     "name": "Drywall Sheet",
     "description": "A large sheet of drywall used for interior wall and ceiling construction.",
     "weight": 44,
-    "value": 12,
-    "size": "large"
+    "value": 12
   },
   {
-    "id": "u1v2w3x4",
     "name": "Insulation Roll",
     "description": "Fiberglass or foam insulation material used to regulate temperature and sound in buildings.",
     "weight": 22,
-    "value": 25,
-    "size": "medium"
+    "value": 25
   },
   {
-    "id": "y5z6a7b8",
     "name": "Roof Shingles",
     "description": "Overlapping tiles used to cover roofs, typically made from asphalt, wood, or metal.",
     "weight": 4,
-    "value": 1.25,
-    "size": "small"
+    "value": 2
   },
   {
-    "id": "c9d0e1f2",
     "name": "Plywood Sheet",
     "description": "A wooden panel made by gluing thin layers of wood together, used for flooring and construction.",
     "weight": 66,
-    "value": 18,
-    "size": "large"
+    "value": 18
   },
   {
-    "id": "g3h4i5j6",
     "name": "Bricks",
     "description": "Standard clay or concrete bricks used for constructing walls and foundations.",
     "weight": 7,
-    "value": 0.75,
-    "size": "small"
+    "value": 1
   },
   {
-    "id": "k7l8m9n0",
     "name": "Gravel",
     "description": "Small rocks used as a base material for roads, foundations, and drainage.",
     "weight": 2205,
-    "value": 30,
-    "size": "extra large"
+    "value": 30
   },
   {
-    "id": "o1p2q3r4",
     "name": "Sand",
     "description": "Fine-grained material used in concrete, mortar, and landscaping.",
     "weight": 3307,
-    "value": 25,
-    "size": "extra large"
+    "value": 25
   },
   {
-    "id": "s5t6u7v8",
     "name": "Paint",
     "description": "Liquid coating used for finishing and protecting surfaces, available in various types (e.g., interior, exterior).",
     "weight": 11,
-    "value": 20,
-    "size": "medium"
+    "value": 20
   },
   {
-    "id": "w9x0y1z2",
     "name": "PVC Pipes",
     "description": "Plastic pipes used for plumbing, electrical conduits, and drainage systems.",
     "weight": 7,
-    "value": 2,
-    "size": "medium"
+    "value": 2
   },
   {
-    "id": "a3b4c5d6",
     "name": "Glass Panel",
     "description": "Flat glass used for windows, facades, and other architectural purposes.",
     "weight": 33,
-    "value": 50,
-    "size": "large"
+    "value": 50
   },
   {
-    "id": "e7f8g9h0",
     "name": "Metal Sheet",
     "description": "Thin sheets of metal used in roofing, cladding, and construction frames.",
     "weight": 22,
-    "value": 30,
-    "size": "large"
+    "value": 30
   },
   {
-    "id": "i1j2k3l4",
     "name": "Concrete Slab",
     "description": "Large pre-cast concrete slabs used for floors, foundations, and roofing.",
     "weight": 441,
-    "value": 100,
-    "size": "extra large"
+    "value": 100
   },
   {
-    "id": "m5n6o7p8",
     "name": "Mortar Mix",
     "description": "A mixture of cement, sand, and water used for bonding bricks and stones.",
     "weight": 55,
-    "value": 8,
-    "size": "medium"
+    "value": 8
   },
   {
-    "id": "q9r0s1t2",
     "name": "Lumber",
     "description": "Wood that has been processed into standard sizes, typically used for framing and construction.",
     "weight": 22,
-    "value": 10,
-    "size": "medium"
+    "value": 10
   },
   {
-    "id": "u3v4w5x6",
     "name": "Stone Slab",
     "description": "Large slabs of natural stone, such as granite or marble, used for countertops or flooring.",
     "weight": 110,
-    "value": 200,
-    "size": "extra large"
+    "value": 200
   },
   {
-    "id": "y7z8a9b0",
     "name": "Tile",
     "description": "Flat pieces of ceramic, porcelain, or stone used for flooring and wall coverings.",
     "weight": 2,
-    "value": 2,
-    "size": "small"
+    "value": 2
   },
   {
-    "id": "c1d2e3f4",
     "name": "Reinforced Mesh",
     "description": "A welded wire mesh used to reinforce concrete structures.",
     "weight": 22,
-    "value": 30,
-    "size": "medium"
+    "value": 30
   }
 ]
