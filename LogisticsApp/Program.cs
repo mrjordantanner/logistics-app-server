@@ -14,7 +14,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowLocalhost4200");
+app.UseCors("AllowAll");
 //app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization();
@@ -26,12 +26,15 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     // Add CORS policy
     services.AddCors(options =>
     {
-        options.AddPolicy("AllowLocalhost4200", builder =>
+        options.AddPolicy("AllowAll", builder =>
         {
             builder
-                .WithOrigins("http://localhost:4200", "https://localhost:4200")
-                .AllowAnyHeader()
+                .AllowAnyOrigin()
                 .AllowAnyMethod()
+                .AllowAnyHeader()
+                //.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                //.AllowAnyHeader()
+                //.AllowAnyMethod()
                 .AllowCredentials();
         });
     });
